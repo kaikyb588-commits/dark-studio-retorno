@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Dark Studio · TikTok</title>
+  <link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<main>
+  <span class="marca" aria-hidden="true"></span>
+  <h1>Voltando ao estúdio…</h1>
+  <p id="msg">Levando o retorno do TikTok para o Dark Studio aberto neste computador.</p>
+  <p><a id="ir" class="botao" href="http://127.0.0.1:8100/api/v1/tiktok/callback">Continuar</a></p>
+  <p>Se nada acontecer, confira se o Dark Studio está aberto neste computador e clique em Continuar.</p>
+</main>
+<script>
+  // Repassa só os campos do retorno do TikTok para a API local do estúdio. O "state" é de uso
+  // único e o "code" não vale nada sem a chave secreta, que fica só no servidor do estúdio.
+  (function () {
+    var keep = ["code", "state", "scopes", "error", "error_description"];
+    var from = new URLSearchParams(window.location.search);
+    var to = new URLSearchParams();
+    keep.forEach(function (k) { if (from.has(k)) to.set(k, from.get(k)); });
+    var target = "http://127.0.0.1:8100/api/v1/tiktok/callback?" + to.toString();
+    document.getElementById("ir").href = target;
+    if (from.has("state")) window.location.replace(target);
+    else document.getElementById("msg").textContent = "Esta página só é usada quando o TikTok devolve a conexão.";
+  })();
+</script>
+</body>
+</html>
